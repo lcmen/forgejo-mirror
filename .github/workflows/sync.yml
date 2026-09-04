@@ -20,7 +20,7 @@ jobs:
 
       - name: Sync Image Tags
         run: |
-          for tag in 15 16 latest; do
+          for tag in 15 16; do
             echo "Syncing tag: $tag..."
             skopeo copy --multi-arch all \
               docker://codeberg.org/forgejo/forgejo:$tag \
