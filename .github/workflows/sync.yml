@@ -21,8 +21,17 @@ jobs:
       - name: Sync Image Tags
         run: |
           for tag in 15 16; do
+            src="docker://codeberg.org/forgejo/forgejo:$tag"
+            dst="docker://${{ secrets.DOCKERHUB_USERNAME }}/forgejo:$tag"
+
+            src_digest=$(skopeo inspect --format '{{.Digest}}' "$src")
+            dst_digest=$(skopeo inspect --format '{{.Digest}}' "$dst" 2>/dev/null || true)
+
+            if [ "$src_digest" = "$dst_digest" ]; then
+              echo "$tag is already up to date"
+              continue
+            fi
+
             echo "Syncing tag: $tag..."
-            skopeo copy --multi-arch all \
-              docker://codeberg.org/forgejo/forgejo:$tag \
-              docker://${{ secrets.DOCKERHUB_USERNAME }}/forgejo:$tag
+            skopeo copy --multi-arch all "$src" "$dst"
           done
