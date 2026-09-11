@@ -20,7 +20,7 @@ jobs:
 
       - name: Sync Image Tags
         run: |
-          for mapping in 15:15 16:16 16:latest; do
+          for mapping in 15:15 16:16 latest:latest; do
             src_tag="${mapping%%:*}"
             dst_tag="${mapping##*:}"
             src="docker://codeberg.org/forgejo/forgejo:$src_tag"
